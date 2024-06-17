@@ -54,7 +54,11 @@ class MainMenu(Screen):
         Screen.__init__(self)  # get parent class info
 
         # title
-        self.title = p_font(40).render(NAME, True, D1_GREEN)      
+        self.title = p_font(40).render(NAME, True, D1_GREEN)
+
+        # button
+        self.width = 150
+        self.height = 50     
 
     # create widgets
     def create_widgets(self) -> None:
@@ -67,8 +71,15 @@ class MainMenu(Screen):
         # buttons
         self.play_button = Button("Play", 30, D1_GREEN, WHITE,
                                   D1_GREEN, WHITE, D1_GREEN,
-                                  100, 40, self.screen_centerx, self.screen_centery)
-        self.play_button.show_button(self.display_surf)
+                                  self.width, self.height,
+                                  self.screen_centerx*0.8, self.screen_centery)
+        play: bool = self.play_button.show_button(self.display_surf)
+
+        self.tutorial_button = Button("Tutorial", 30, D1_GREEN, WHITE,
+                                  D1_GREEN, WHITE, D1_GREEN,
+                                  self.width, self.height,
+                                  self.screen_centerx*0.8, self.screen_centery+60)
+        tutorial: bool = self.tutorial_button.show_button(self.display_surf)
 
     # display screen
     def run(self) -> None:

@@ -30,35 +30,36 @@ class Button:
             # create text
             self.t1 = s_font(t_size).render(text, True, t1_colour)  # primary
             self.t2 = s_font(t_size).render(text, True, t2_colour)  # hover
-            self.t_rect = self.t1.get_rect(center=(self.b_rect))
+            self.t_rect = self.t1.get_rect(center=(self.b_rect.centerx, self.b_rect.centery))
 
         # show button on display
-        def show_button(self, surf) -> bool:
-            """Show and use button."""
-            # draw
+    def show_button(self, surf) -> bool:
+        """Show and use button."""
+        # handle collisions
+        action = False
+        clicked = False
+        m_pos = pygame.mouse.get_pos()
+
+        # mouse on button
+        if self.b_rect.collidepoint(m_pos):
+            self.current_colour = self.h_colour
             pygame.draw.rect(surf, self.current_colour, self.b_rect, 0, 4)  # button bg
-            pygame.draw.rect(surf, self.o_colour, self.b_rect, 2, 4)  # outline
-            
+            surf.blit(self.t2, self.t_rect)  # hovered over text
 
-            # handle collisions
-            action = False
-            clicked = False
-            m_pos = pygame.mouse.get_pos()
+            # button down
+            if pygame.mouse.get_pressed()[0] == 1:
+                    clicked = True
 
-            # mouse on button
-            if self.b_rect.collidepoint(m_pos):
-                surf.blit(self.t2, self.text_rect)
-                # button down
-                if pygame.mouse.get_pressed()[0] == 1:
-                        clicked = True
-                    
-                # button clicked
-                if pygame.mouse.get_pressed()[0] == 0 and clicked == True:
-                       clicked = False
-                       action = True
-                
-                # mouse is not on button
-                else:
-                    self.current_colour = self.b_colour
-                    surf.blit(self.t1, self.text_rect)
-            return action
+            # button clicked
+            if pygame.mouse.get_pressed()[0] == 0 and clicked == True:
+                   clicked = False
+                   action = True
+
+        else:
+            self.current_colour = self.b_colour
+            pygame.draw.rect(surf, self.current_colour, self.b_rect, 0, 4)  # button bg
+            surf.blit(self.t1, self.t_rect)  # not hovered over
+
+        pygame.draw.rect(surf, self.o_colour, self.b_rect, 2, 4)  # outline
+
+        return clicked
